@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(TARGET helloworld_cli)
+set(TARGET helloworld)
 
 set(PATCH_VERSION 1 CACHE INTERNAL "Patch version")
 set(PROJECT_VERSION 0.0.${PATCH_VERSION})
@@ -19,10 +19,10 @@ configure_file(include/config.h.in include/config.h)
 
 file(GLOB SRC_FILES src/*.cpp)
 
-add_executable(${TARGET} ${SRC_FILES})
-target_include_directories(${TARGET} PRIVATE "${CMAKE_BINARY_DIR}/include")
+add_executable(${TARGET}_cli ${SRC_FILES})
+target_include_directories(${TARGET}_cli PRIVATE "${CMAKE_BINARY_DIR}/include")
 
-set_target_properties(${TARGET} PROPERTIES
+set_target_properties(${TARGET}_cli PROPERTIES
     CXX_STANDARD 14
     CXX_STANDARD_REQUIRED ON
 )
@@ -60,7 +60,7 @@ gtest_discover_tests(${TARGET}_test)
 
 ### Package
 
-install(TARGETS ${TARGET} RUNTIME DESTINATION bin)
+install(TARGETS ${TARGET}_cli RUNTIME DESTINATION bin)
 
 set(CPACK_GENERATOR DEB)
 
