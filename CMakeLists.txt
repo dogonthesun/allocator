@@ -5,15 +5,17 @@ set(TARGET helloworld_cli)
 set(PATCH_VERSION 1 CACHE INTERNAL "Patch version")
 set(PROJECT_VERSION 0.0.${PATCH_VERSION})
 
-project(${TARGET} VERSION ${PROJECT_VERSION})
-
-configure_file(include/config.h.in include/config.h)
-
 if (MSVC)
     add_compile_options(/W4)
 else()
     add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
+
+### Exec
+
+project(${TARGET} VERSION ${PROJECT_VERSION})
+
+configure_file(include/config.h.in include/config.h)
 
 file(GLOB SRC_FILES src/*.cpp)
 
@@ -25,7 +27,7 @@ set_target_properties(${TARGET} PROPERTIES
     CXX_STANDARD_REQUIRED ON
 )
 
-# Tests
+### Tests
 
 include(FetchContent)
 FetchContent_Declare(
@@ -56,4 +58,16 @@ target_link_libraries(
 include(GoogleTest)
 gtest_discover_tests(${TARGET}_test)
 
-# TODO Add package
+### Package
+
+install(TARGETS ${TARGET} RUNTIME DESTINATION bin)
+
+set(CPACK_GENERATOR DEB)
+
+set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
+
+set(CPACK_PACKAGE_CONTACT "ohhdl@dalailama.com")
+
+include(CPack)
